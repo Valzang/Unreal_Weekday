@@ -23,4 +23,26 @@ public:
 	// Called every frame (유니티의 Update)
 	virtual void Tick(float DeltaTime) override;
 
+private:
+	// 어디에서나 잘 보임
+	UPROPERTY(EditAnywhere)
+		int A = 10;
+	// 인스턴스(=복사본)에서만 보임 ( 실제 씬에 배치된 게임 오브젝트 )
+	UPROPERTY(EditInstanceOnly)
+		int B = 20;
+
+	// 디폴트 세팅(=원본)에서만 보임 ( 유니티로 따지면 프리팹 )
+	UPROPERTY(EditDefaultsOnly)
+		int C;
+
+	// 보이기만 하고 수정 불가
+	//UPROPERTY(VisibleAnywhere)
+	//	int D = 40;
+
+
+	// 블루프린트에서 가져오게끔 하려고 protected로 가져올 수 있게끔 해주기
+protected:
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+		int D = 40;
+
 };

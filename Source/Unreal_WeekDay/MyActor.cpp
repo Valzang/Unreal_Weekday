@@ -6,15 +6,33 @@
 // Sets default values
 AMyActor::AMyActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Update와도 같은 Tick을 부를지 말지
 	PrimaryActorTick.bCanEverTick = true;
 
+	C = 30;
 }
 
 // Called when the game starts or when spawned
 void AMyActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//String임
+	FString str;
+	str.Append("A : ");
+	str.Append(FString::FromInt(A));
+
+	str.Append(",B : ");
+	str.Append(FString::FromInt(B));
+
+	str.Append(",C : ");
+	str.Append(FString::FromInt(C));
+
+	str.Append(",D : ");
+	str.Append(FString::FromInt(D));
+
+	// 유니티의 Debug, 싱글톤임
+	GLog->Log(str);
 	
 }
 
