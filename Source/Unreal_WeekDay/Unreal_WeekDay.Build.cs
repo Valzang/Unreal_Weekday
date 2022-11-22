@@ -10,7 +10,11 @@ public class Unreal_WeekDay : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+		//ModuleDirectory : 이 파일이 있는 곳의 위치를 말함.
+		PublicIncludePaths.Add(ModuleDirectory);
+
+
+		//PrivateDependencyModuleNames.AddRange(new string[] {  });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
