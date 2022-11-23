@@ -19,8 +19,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-//public:	
+public:	
 	UPROPERTY(VisibleDefaultsOnly)
 		class UStaticMeshComponent* Mesh;
+	
+private:
+	class UMaterialInstanceDynamic* Material;
+	UFUNCTION()
+		void ChangeColor();
 
 };
