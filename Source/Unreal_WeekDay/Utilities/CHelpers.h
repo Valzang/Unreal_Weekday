@@ -21,4 +21,24 @@ public :
 		verifyf(!!obj, L"!!asset");
 		*outObject = obj;
 	}
+
+	template<typename T> static void CreateComponent(AActor* inActor, T** inComponent,
+													 FName inName, USceneComponent* inParent = NULL)
+	{
+		*inComponent = inActor->CreateDefaultSubobject<T>(inName);
+		if (!!inParent)
+		{
+			(*inComponent)->SetupAttachment(inParent);
+			return;
+		}
+
+		inActor->SetRootComponent(*inComponent);
+	}
+
+	template<typename T> static void GetClass(TSubclassOf<T>* outClass, FString InPath)
+	{
+		ConstructorHelpers::FClassFinder<T> asset(*InPath);
+		verifyf(asset.Succeeded(), L"asset.Succeeded()");
+		*outClass = asset.Class;
+	}
 };

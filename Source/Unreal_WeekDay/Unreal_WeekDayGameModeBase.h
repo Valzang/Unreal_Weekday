@@ -7,11 +7,14 @@
 #include "Unreal_WeekDayGameModeBase.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class UNREAL_WEEKDAY_API AUnreal_WeekDayGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	AUnreal_WeekDayGameModeBase();
+
 };
