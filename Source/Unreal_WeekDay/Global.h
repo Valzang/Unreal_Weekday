@@ -4,3 +4,4 @@
 #include "Kismet/KismetMathLibrary.h"	// 랜덤 관련
 #include "Utilities/CHelpers.h" // 직접 만들어둔 NullCheck 함수
 #include "Utilities/Defines.h" // 
+#include "Utilities/CLog.h" // 로그 관련
