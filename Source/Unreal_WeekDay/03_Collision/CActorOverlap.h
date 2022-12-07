@@ -16,14 +16,15 @@ private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class UTextRenderComponent* Text;
 
-public:	
-	ACActorOverlap();
-
 private:
 	UFUNCTION()
 		void ActorBeginOverlap(AActor* OverlappedActor, AActor* OtherActor);
 	UFUNCTION()
 		void ActorEndOverlap(AActor* OverlappedActor, AActor* OtherActor);
+
+public:	
+	ACActorOverlap();
+
 protected:
 	virtual void BeginPlay() override;
 
