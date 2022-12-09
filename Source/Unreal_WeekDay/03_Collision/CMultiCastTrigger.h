@@ -2,17 +2,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "CTrigger.generated.h"
+#include "CMultiCastTrigger.generated.h"
 
-DECLARE_DELEGATE(FBoxLightBeginOverlap);
-DECLARE_DELEGATE(FBoxLightEndOverlap);
-DECLARE_DELEGATE_RetVal_OneParam(FString, FBoxLightRandomBeginOverlap, FLinearColor);
-
+DECLARE_MULTICAST_DELEGATE_TwoParams(FMultiLightBeginOverlap, int32, FLinearColor);
 
 UCLASS()
-class UNREAL_WEEKDAY_API ACTrigger : public AActor
+class UNREAL_WEEKDAY_API ACMultiCastTrigger : public AActor
 {
-	GENERATED_BODY()
+	GENERATED_BODY()	
 
 private:
 	UPROPERTY(VisibleDefaultsOnly)
@@ -21,9 +18,9 @@ private:
 		class UBoxComponent* Box;
 	UPROPERTY(VisibleDefaultsOnly)
 		class UTextRenderComponent* Text;
-	
+
 public:	
-	ACTrigger();
+	ACMultiCastTrigger();
 
 protected:
 	virtual void BeginPlay() override;
@@ -35,9 +32,6 @@ private:
 		void ActorEndOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
 public :
-	FBoxLightBeginOverlap			OnBoxLightBeginOverlap;
-	FBoxLightEndOverlap				OnBoxLightEndOverlap;
-	FBoxLightRandomBeginOverlap		OnBoxLightRandomBeginOverlap;
-
+	FMultiLightBeginOverlap		OnMultiLightBeginOverlap;
 
 };

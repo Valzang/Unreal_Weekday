@@ -15,12 +15,16 @@ private:
 		class UTextRenderComponent* Text;
 	UPROPERTY(VisibleDefaultsOnly)
 		class UPointLightComponent* Light;
+	UPROPERTY(VisibleDefaultsOnly)
+		class UPointLightComponent* Light2;
 	
 private:
 	UFUNCTION()
 		void OnLight();
 	UFUNCTION()
 		void OffLight();
+	UFUNCTION()
+		FString OnRandomLight(FLinearColor InColor);
 public:	
 	ACLight();
 
