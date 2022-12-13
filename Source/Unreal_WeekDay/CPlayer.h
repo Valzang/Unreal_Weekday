@@ -17,6 +17,10 @@ private :
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCameraComponent*		Camera;
 
+private:
+	class UMaterialInstanceDynamic* BodyMaterial;
+	class UMaterialInstanceDynamic* LogoMaterial;
+
 public:
 	ACPlayer();
 
@@ -36,4 +40,7 @@ private :
 	void OnRunning();
 	void OffRunning();
 
+public:
+	UFUNCTION(BlueprintCallable)
+		void ChangeColor(FLinearColor InColor);
 };
