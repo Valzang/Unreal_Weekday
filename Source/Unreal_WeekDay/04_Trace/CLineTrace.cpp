@@ -3,6 +3,7 @@
 #include "Global.h"
 #include "CCylinder.h"
 #include "Components/TextRenderComponent.h"
+#include "CPlayer.h"
 
 ACLineTrace::ACLineTrace()
 {
@@ -23,7 +24,13 @@ void ACLineTrace::BeginPlay()
 {
 	Super::BeginPlay();
 	CHelpers::FindActors<ACCylinder>(GetWorld(), Cylinders);	
+	OnTraceResult.AddDynamic(this, &ACLineTrace::StartJump);
 	
+}
+
+void ACLineTrace::RestoreColor(ACPlayer* InPlayer)
+{
+	InPlayer->ChangeColor(FLinearColor(1, 1, 1));
 }
 
 void ACLineTrace::Tick(float DeltaTime)
@@ -51,7 +58,25 @@ void ACLineTrace::Tick(float DeltaTime)
 		hitResult, true, FLinearColor::Green, FLinearColor::Red))
 	{
 		CLog::Log(hitResult.GetActor()->GetName());
-	}
 
+		if (OnTraceResult.IsBound())
+		{
+			FLinearColor color;
+			color.R = UKismetMathLibrary::RandomFloatInRange(0, 1);
+			color.G = UKismetMathLibrary::RandomFloatInRange(0, 1);
+			color.B = UKismetMathLibrary::RandomFloatInRange(0, 1);
+			color.A = 1.0f;
+			OnTraceResult.Broadcast(hitResult.GetActor(), color);			
+		}
+	}
 }
+
+void ACLineTrace::StartJump(AActor* InActor, FLinearColor InColor)
+{
+	ACPlayer* player = Cast<ACPlayer>(InActor);
+	CheckNull(player);
+
+	player->Jump();
+}
+
 
