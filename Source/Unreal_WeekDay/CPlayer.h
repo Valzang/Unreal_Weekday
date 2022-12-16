@@ -20,6 +20,8 @@ private :
 private:
 	class UMaterialInstanceDynamic* BodyMaterial;
 	class UMaterialInstanceDynamic* LogoMaterial;
+	class ACRifle* Rifle;
+	void OnRifle();
 
 public:
 	ACPlayer();

@@ -12,6 +12,10 @@
 #include "Materials/MaterialInstanceConstant.h"
 #include "Materials/MaterialInstanceDynamic.h"
 
+#include "CRifle.h"
+
+
+
 ACPlayer::ACPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -62,6 +66,8 @@ void ACPlayer::BeginPlay()
 
 	GetMesh()->SetMaterial(0, BodyMaterial);
 	GetMesh()->SetMaterial(1, LogoMaterial);
+
+	Rifle = ACRifle::Spawn(GetWorld(), this);
 	
 }
 
@@ -83,6 +89,7 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("Running", EInputEvent::IE_Pressed, this, &ACPlayer::OnRunning);
 	PlayerInputComponent->BindAction("Running", EInputEvent::IE_Released, this, &ACPlayer::OffRunning);
+	PlayerInputComponent->BindAction("Rifle", EInputEvent::IE_Pressed, this, &ACPlayer::OnRifle);
 
 }
 
@@ -126,4 +133,10 @@ void ACPlayer::ChangeColor(FLinearColor InColor)
 	//LogoMaterial->SetVectorParameterValue("BodyColor", InColor);
 }
 
-
+void ACPlayer::OnRifle()
+{
+	if (Rifle->GetEquipped())
+		Rifle->Unequip();
+	else
+		Rifle->Equip();
+}
