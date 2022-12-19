@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "IRifle.h"
 #include "CPlayer.generated.h"
 
 UCLASS()
-class UNREAL_WEEKDAY_API ACPlayer : public ACharacter
+class UNREAL_WEEKDAY_API ACPlayer : public ACharacter, public IIRifle
 {
 	GENERATED_BODY()
 
@@ -22,6 +23,8 @@ private:
 	class UMaterialInstanceDynamic* LogoMaterial;
 	class ACRifle* Rifle;
 	void OnRifle();
+	void OnAim();
+	void OffAim();
 
 public:
 	ACPlayer();
@@ -45,4 +48,5 @@ private :
 public:
 	UFUNCTION(BlueprintCallable)
 		void ChangeColor(FLinearColor InColor);
+	FORCEINLINE class ACRifle* GetRifle() override { return Rifle; }
 };
