@@ -12,11 +12,18 @@ class UNREAL_WEEKDAY_API ACPlayer : public ACharacter, public IIRifle
 {
 	GENERATED_BODY()
 
+
 private :
 	UPROPERTY(VisibleDefaultsOnly)
 		class USpringArmComponent*	SpringArm;
-	UPROPERTY(VisibleDefaultsOnly)
+
+protected:
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
 		class UCameraComponent*		Camera;
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnZoomIn();
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnZoomOut();
 
 private:
 	class UMaterialInstanceDynamic* BodyMaterial;
@@ -31,7 +38,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
+	
 public:	
 	virtual void Tick(float DeltaTime) override;
 

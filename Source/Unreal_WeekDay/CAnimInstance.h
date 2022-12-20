@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -16,6 +14,12 @@ protected:
 		float Speed;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
 		bool bEquipped;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
+		float Direction;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
+		bool bAiming;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Animation")
+		float Pitch;
 
 public:
 	virtual void NativeBeginPlay() override;
