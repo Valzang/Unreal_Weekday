@@ -16,6 +16,8 @@ class UNREAL_WEEKDAY_API ACPlayer : public ACharacter, public IIRifle
 private :
 	UPROPERTY(VisibleDefaultsOnly)
 		class USpringArmComponent*	SpringArm;
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
+		TSubclassOf<class UCUserWidget_CrossHair> CrossHairClass;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
@@ -29,9 +31,12 @@ private:
 	class UMaterialInstanceDynamic* BodyMaterial;
 	class UMaterialInstanceDynamic* LogoMaterial;
 	class ACRifle* Rifle;
+	class UCUserWidget_CrossHair* CrossHair;
 	void OnRifle();
 	void OnAim();
 	void OffAim();
+	void OnFire();
+	void OffFire();
 
 public:
 	ACPlayer();
@@ -56,4 +61,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void ChangeColor(FLinearColor InColor);
 	FORCEINLINE class ACRifle* GetRifle() override { return Rifle; }
+	void GetLocationAndDirection
+	(FVector& OutStart, FVector& OutEnd, FVector& OutDirection) override;
+
+	void OnFocus() override;
+	void OffFocus() override;
 };

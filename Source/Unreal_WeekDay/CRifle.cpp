@@ -6,10 +6,11 @@
 #include "GameFramework/Character.h"
 #include "CPlayer.h"
 #include "Animation/AnimMontage.h"
-
+#include "Engine/StaticMeshActor.h"
 
 ACRifle::ACRifle()
 {
+	PrimaryActorTick.bCanEverTick = true;
 	CHelpers::CreateComponent<USkeletalMeshComponent>(this, &Mesh, "Mesh");
 	USkeletalMesh* mesh;
 	CHelpers::GetAsset<USkeletalMesh>(&mesh, "SkeletalMesh'/Game/Weapons/Meshes/AR4/SK_AR4.SK_AR4'");
@@ -26,9 +27,43 @@ void ACRifle::BeginPlay()
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 	AttachToComponent(OwnerCharacter->GetMesh(),
 					  FAttachmentTransformRules(EAttachmentRule::KeepRelative, true),
-					  HolsterSocket);
+					  HolsterSocket);	
+}
 
+void ACRifle::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	CheckFalse(bAiming);
+	IIRifle* rifle = Cast<IIRifle>(OwnerCharacter);
+	CheckNull(rifle);
+
+	FVector start, end, direction;
+	rifle->GetLocationAndDirection(start, end, direction);
+
+	//DrawDebugLine(GetWorld(), start, end, FColor::Green, false, 3.0f);
+	FCollisionQueryParams params;
+	// 충돌 처리 제외 오브젝트들 추가
+	params.AddIgnoredActor(this);
+	params.AddIgnoredActor(OwnerCharacter);
 	
+	FHitResult hitResult;
+	if (GetWorld()->LineTraceSingleByChannel
+					(hitResult, start, end, ECollisionChannel::ECC_WorldDynamic, params))
+	{
+		AStaticMeshActor* staticMeshActor = Cast<AStaticMeshActor>(hitResult.GetActor());
+		if (!!staticMeshActor)
+		{
+			UStaticMeshComponent* meshComponent 
+				= Cast<UStaticMeshComponent>(staticMeshActor->GetRootComponent());
+			if (!!meshComponent && meshComponent->BodyInstance.bSimulatePhysics)
+			{
+				rifle->OnFocus();
+				return;
+			}
+		}
+	}
+	rifle->OffFocus();
 }
 
 ACRifle* ACRifle::Spawn(UWorld* InWorld, ACharacter* InOwner)
@@ -94,4 +129,55 @@ void ACRifle::Begin_Aiming()
 void ACRifle::End_Aiming()
 {
 	bAiming = false;
+}
+
+void ACRifle::Begin_Fire()
+{
+	CheckFalse(bEquipped);
+	CheckTrue(bEquipping);
+	CheckFalse(bAiming);
+	CheckTrue(bFiring);
+
+	Firing();
+}
+
+void ACRifle::Firing()
+{
+	IIRifle* rifle = Cast<IIRifle>(OwnerCharacter);
+	CheckNull(rifle);
+	
+	FVector start, end, direction;
+	rifle->GetLocationAndDirection(start, end, direction);
+
+	FCollisionQueryParams params;
+	params.AddIgnoredActor(this);
+	params.AddIgnoredActor(OwnerCharacter);
+
+	FHitResult hitResult;
+	if (GetWorld()->LineTraceSingleByChannel
+	(hitResult, start, end, ECollisionChannel::ECC_WorldDynamic, params))
+	{
+		AStaticMeshActor* staticMeshActor = Cast<AStaticMeshActor>(hitResult.GetActor());
+		if (!!staticMeshActor)
+		{
+			UStaticMeshComponent* meshComponent
+				= Cast<UStaticMeshComponent>(staticMeshActor->GetRootComponent());
+			if (!!meshComponent && meshComponent->BodyInstance.bSimulatePhysics)
+			{
+				direction = staticMeshActor->GetActorLocation() - OwnerCharacter->GetActorLocation();
+				direction.Normalize();
+
+				meshComponent->AddImpulseAtLocation(
+					direction * meshComponent->GetMass() * 100, 
+					OwnerCharacter->GetActorLocation());
+				return;
+			}
+		}
+	}
+	rifle->OffFocus();
+}
+
+void ACRifle::End_Fire()
+{
+	bFiring = false;
 }

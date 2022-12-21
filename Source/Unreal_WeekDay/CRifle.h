@@ -25,6 +25,7 @@ public:
 	static ACRifle* Spawn(class UWorld* InWorld, class ACharacter* InOwner);
 
 public:
+	virtual void Tick(float DeltaTime) override;
 	ACRifle();
 
 protected:
@@ -37,6 +38,7 @@ private:
 	bool bEquipped;
 	bool bEquipping;
 	bool bAiming;
+	bool bFiring;
 
 public:
 	FORCEINLINE bool GetEquipped() { return bEquipped; }
@@ -53,4 +55,8 @@ public:
 
 	void Begin_Aiming();
 	void End_Aiming();
+
+	void Begin_Fire();
+	void Firing();
+	void End_Fire();
 };

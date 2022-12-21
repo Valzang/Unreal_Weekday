@@ -19,5 +19,9 @@ class UNREAL_WEEKDAY_API IIRifle
 
 public :
 	virtual class ACRifle* GetRifle() = 0;
-	
+	virtual void GetLocationAndDirection
+	(FVector& OutStart, FVector& OutEnd, FVector& OutDirection) = 0;
+
+	virtual void OnFocus() = 0;
+	virtual void OffFocus() = 0;
 };

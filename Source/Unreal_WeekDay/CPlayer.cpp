@@ -13,6 +13,7 @@
 #include "Materials/MaterialInstanceDynamic.h"
 
 #include "CRifle.h"
+#include "06_Widgets/CUserWidget_CrossHair.h"
 
 
 
@@ -47,6 +48,9 @@ ACPlayer::ACPlayer()
 	SpringArm->bUsePawnControlRotation = true;
 	SpringArm->SocketOffset = FVector(0.0f, 60.0f, 0.0f);
 
+	CHelpers::GetClass<UCUserWidget_CrossHair>(&CrossHairClass, 
+											   "WidgetBlueprint'/Game/Widgets/WB_CrossHair.WB_CrossHair_C'");
+
 }
 
 
@@ -67,6 +71,11 @@ void ACPlayer::BeginPlay()
 
 	GetMesh()->SetMaterial(0, BodyMaterial);
 	GetMesh()->SetMaterial(1, LogoMaterial);
+
+	CrossHair = CreateWidget<UCUserWidget_CrossHair, APlayerController>
+		(GetController<APlayerController>(), CrossHairClass);
+	CrossHair->AddToViewport();
+	CrossHair->SetVisibility(ESlateVisibility::Hidden);
 
 	Rifle = ACRifle::Spawn(GetWorld(), this);
 	
@@ -93,6 +102,9 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Rifle", EInputEvent::IE_Pressed, this, &ACPlayer::OnRifle);
 	PlayerInputComponent->BindAction("Aim", EInputEvent::IE_Pressed, this, &ACPlayer::OnAim);
 	PlayerInputComponent->BindAction("Aim", EInputEvent::IE_Released, this, &ACPlayer::OffAim);
+
+	PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Pressed, this, &ACPlayer::OnFire);
+	PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Released, this, &ACPlayer::OffFire);
 
 }
 
@@ -136,6 +148,31 @@ void ACPlayer::ChangeColor(FLinearColor InColor)
 	//LogoMaterial->SetVectorParameterValue("BodyColor", InColor);
 }
 
+void ACPlayer::GetLocationAndDirection(FVector& OutStart, FVector& OutEnd, FVector& OutDirection)
+{
+	OutDirection = Camera->GetForwardVector();
+	FTransform transform = Camera->GetComponentToWorld();
+
+	FVector cameraLocation = transform.GetLocation();
+	OutStart = cameraLocation + OutDirection;
+
+	FVector conDirection = 
+		UKismetMathLibrary::RandomUnitVectorInEllipticalConeInDegrees(OutDirection, 2.0f, 3.0f);
+
+	conDirection *= 3000.0f;
+	OutEnd = cameraLocation + conDirection;
+}
+
+void ACPlayer::OnFocus()
+{
+	CrossHair->OnFocus();
+}
+
+void ACPlayer::OffFocus()
+{
+	CrossHair->OffFocus();
+}
+
 void ACPlayer::OnRifle()
 {
 	if (Rifle->GetEquipped())
@@ -157,6 +194,7 @@ void ACPlayer::OnAim()
 
 	OnZoomIn();
 	Rifle->Begin_Aiming();
+	CrossHair->SetVisibility(ESlateVisibility::Visible);
 }
 
 void ACPlayer::OffAim()
@@ -172,4 +210,15 @@ void ACPlayer::OffAim()
 
 	OnZoomOut();
 	Rifle->End_Aiming();
+	CrossHair->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void ACPlayer::OnFire()
+{
+	Rifle->Begin_Fire();
+}
+
+void ACPlayer::OffFire()
+{
+	Rifle->End_Fire();
 }
