@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Camera/CameraShake.h"
 #include "Components/CapsuleComponent.h"
 
 #include "Materials/MaterialInstanceConstant.h"
@@ -50,7 +51,8 @@ ACPlayer::ACPlayer()
 
 	CHelpers::GetClass<UCUserWidget_CrossHair>(&CrossHairClass, 
 											   "WidgetBlueprint'/Game/Widgets/WB_CrossHair.WB_CrossHair_C'");
-
+	CHelpers::GetClass<UCameraShake>(&CameraShakeClass,
+									 "Blueprint'/Game/BP_CameraShake.BP_CameraShake_C'");
 }
 
 
@@ -171,6 +173,12 @@ void ACPlayer::OnFocus()
 void ACPlayer::OffFocus()
 {
 	CrossHair->OffFocus();
+}
+
+void ACPlayer::PlayCameraShake()
+{
+	GetController<APlayerController>()->PlayerCameraManager
+										->PlayCameraShake(CameraShakeClass);
 }
 
 void ACPlayer::OnRifle()

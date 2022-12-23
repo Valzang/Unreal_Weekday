@@ -19,7 +19,19 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Rifle")
 		class UAnimMontage* GrabMontage;
 	UPROPERTY(VisibleDefaultsOnly, Category = "Rifle")
-		class UAnimMontage* UngrabMontage;
+		class UAnimMontage* UngrabMontage;	
+	UPROPERTY(VisibleDefaultsOnly, Category = "Rifle")
+		class UAnimMontage* FireMontage;
+	UPROPERTY(VisibleDefaultsOnly, Category = "Rifle")
+		class UParticleSystem* FlashParticle;
+	UPROPERTY(VisibleDefaultsOnly, Category = "Rifle")
+		class UParticleSystem* EjectParticle;
+	UPROPERTY(VisibleDefaultsOnly, Category = "Rifle")
+		class USoundCue* FireSoundCue;
+	UPROPERTY(VisibleDefaultsOnly, Category = "Rifle")
+		TSubclassOf<class ACBullet> BulletClass;
+	UPROPERTY(VisibleDefaultsOnly, Category = "Rifle")
+		class UParticleSystem* ImpactParticle;
 
 public:
 	static ACRifle* Spawn(class UWorld* InWorld, class ACharacter* InOwner);

@@ -18,6 +18,8 @@ private :
 		class USpringArmComponent*	SpringArm;
 	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
 		TSubclassOf<class UCUserWidget_CrossHair> CrossHairClass;
+	UPROPERTY(EditDefaultsOnly, Category = "Camera")
+		TSubclassOf<class UCameraShake> CameraShakeClass;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
@@ -66,4 +68,5 @@ public:
 
 	void OnFocus() override;
 	void OffFocus() override;
+	void PlayCameraShake();
 };
