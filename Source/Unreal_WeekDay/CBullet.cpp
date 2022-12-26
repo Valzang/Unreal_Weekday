@@ -4,6 +4,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Materials/MaterialInstanceConstant.h"
 
+
 ACBullet::ACBullet()
 {
 	CHelpers::CreateComponent(this, &Mesh, "Mesh");
@@ -22,6 +23,7 @@ ACBullet::ACBullet()
 	Projectile->InitialSpeed = 2e+4f;
 	Projectile->MaxSpeed = 2e+4f;
 	Projectile->ProjectileGravityScale = 0.0f;
+	Projectile->SetUpdatedComponent(Mesh);
 	
 	InitialLifeSpan = 3.0f;
 
@@ -30,5 +32,10 @@ ACBullet::ACBullet()
 void ACBullet::BeginPlay()
 {
 	Super::BeginPlay();
+	Mesh->OnComponentHit.AddDynamic(this, &ACBullet::OnHit);
 	
+}
+void ACBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	Destroy();
 }

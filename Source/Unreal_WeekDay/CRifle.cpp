@@ -10,6 +10,7 @@
 #include "Particles/ParticleSystem.h"
 #include "Sound/SoundCue.h"
 #include "CBullet.h"
+#include "Materials/MaterialInstanceConstant.h"
 
 ACRifle::ACRifle()
 {
@@ -27,6 +28,7 @@ ACRifle::ACRifle()
 	CHelpers::GetAsset<USoundCue>(&FireSoundCue, "SoundCue'/Game/Rifle_Sounds/S_RifleShoot_Cue.S_RifleShoot_Cue'");
 	CHelpers::GetClass<ACBullet>(&BulletClass, "Blueprint'/Game/BP_CBullet.BP_CBullet_C'");
 	CHelpers::GetAsset<UParticleSystem>(&ImpactParticle, "ParticleSystem'/Game/Particles_Rifle/Particles/VFX_Impact_Default.VFX_Impact_Default'");
+	CHelpers::GetAsset<UMaterialInstanceConstant>(&DecalMaterial, "MaterialInstanceConstant'/Game/Materials/M_Decal_Inst.M_Decal_Inst'");
 }
 
 void ACRifle::BeginPlay()
@@ -187,7 +189,11 @@ void ACRifle::Firing()
 	{
 		FRotator rotator = hitResult.ImpactNormal.Rotation();
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactParticle, hitResult.Location, rotator);
+
+		UGameplayStatics::SpawnDecalAtLocation(GetWorld(), DecalMaterial, FVector(5),
+											   hitResult.Location, rotator, 10.0f);
 	}
+
 
 	if (GetWorld()->LineTraceSingleByChannel
 	(hitResult, start, end, ECollisionChannel::ECC_WorldDynamic, params))
